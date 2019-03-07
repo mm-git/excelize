@@ -772,7 +772,8 @@ func (f *File) UnprotectSheet(sheet string) {
 	xlsx.SheetProtection = nil
 }
 
-func (f *File) SetPrintArea(sheet string, printArea string) {
+func (f *File) SetPrintArea(name string, printArea string) {
+	sheet := trimSheetName(name)
 	index := f.GetSheetIndex(sheet)
 
 	f.WorkBook.DefinedNames.DefinedName = append(f.WorkBook.DefinedNames.DefinedName, xlsxDefinedName{
