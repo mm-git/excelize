@@ -772,6 +772,16 @@ func (f *File) UnprotectSheet(sheet string) {
 	xlsx.SheetProtection = nil
 }
 
+func (f *File) SetPrintArea(sheet string, printArea string) {
+	index := f.GetSheetIndex(sheet)
+
+	f.WorkBook.DefinedNames.DefinedName = append(f.WorkBook.DefinedNames.DefinedName, xlsxDefinedName{
+		Name:         "_xlnm.Print_Area",
+		LocalSheetID: &index,
+		Data:         "'" + sheet + "'!" + printArea,
+	})
+}
+
 // trimSheetName provides a function to trim invaild characters by given worksheet
 // name.
 func trimSheetName(name string) string {
@@ -789,65 +799,4 @@ func trimSheetName(name string) string {
 		name = string([]rune(name)[0:31])
 	}
 	return name
-}
-
-// PageLayoutOption is an option of a page layout of a worksheet. See
-// SetPageLayout().
-type PageLayoutOption interface {
-	setPageLayout(layout *xlsxPageSetUp)
-}
-
-// PageLayoutOptionPtr is a writable PageLayoutOption. See GetPageLayout().
-type PageLayoutOptionPtr interface {
-	PageLayoutOption
-	getPageLayout(layout *xlsxPageSetUp)
-}
-
-type (
-	// PrintArea
-	PrintArea string
-)
-
-func (f *File) SetPageLayout(sheet string, opts ...PageLayoutOption) error {
-	s := f.workSheetReader(sheet)
-	ps := s.PageSetUp
-	if ps == nil {
-		ps = new(xlsxPageSetUp)
-		s.PageSetUp = ps
-	}
-
-	for _, opt := range opts {
-		opt.setPageLayout(ps)
-	}
-	return nil
-}
-
-// GetPageLayout provides a function to gets worksheet page layout.
-//
-// Available options:
-//   PageLayoutOrientation(string)
-//   PageLayoutPaperSize(int)
-func (f *File) GetPageLayout(sheet string, opts ...PageLayoutOptionPtr) error {
-	s := f.workSheetReader(sheet)
-	ps := s.PageSetUp
-
-	for _, opt := range opts {
-		opt.getPageLayout(ps)
-	}
-	return nil
-}
-
-// setPageLayout provides a method to set the orientation for the worksheet.
-func (o PrintArea) setPageLayout(ps *xlsxPageSetUp) {
-	ps.PrintArea = string(o)
-}
-
-// getPageLayout provides a method to get the orientation for the worksheet.
-func (o *PrintArea) getPageLayout(ps *xlsxPageSetUp) {
-	// Excel default: portrait
-	if ps == nil || ps.Orientation == "" {
-		*o = ""
-		return
-	}
-	*o = PrintArea(ps.PrintArea)
 }
