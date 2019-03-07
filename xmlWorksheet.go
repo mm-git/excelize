@@ -92,7 +92,7 @@ type xlsxPageSetUp struct {
 	PaperHeight        string  `xml:"paperHeight,attr,omitempty"`
 	PaperSize          string  `xml:"paperSize,attr,omitempty"`
 	PaperWidth         string  `xml:"paperWidth,attr,omitempty"`
-	PrintArea          string  `xml:"printArea,attr,omitempty"`
+	PrintArea          string  `xml:"Print_Area,attr,omitempty"`
 	Scale              int     `xml:"scale,attr,omitempty"`
 	UseFirstPageNumber bool    `xml:"useFirstPageNumber,attr,omitempty"`
 	UsePrinterDefaults bool    `xml:"usePrinterDefaults,attr,omitempty"`
