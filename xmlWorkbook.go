@@ -221,7 +221,7 @@ type xlsxDefinedName struct {
 	VbProcedure       bool   `xml:"vbProcedure,attr,omitempty"`
 	WorkbookParameter bool   `xml:"workbookParameter,attr,omitempty"`
 	Xlm               bool   `xml:"xml,attr,omitempty"`
-	Data              string `xml:",chardata"`
+	Data              string `xml:",innerxml"`
 }
 
 // xlsxCalcPr directly maps the calcPr element. This element defines the
