@@ -809,6 +809,9 @@ type (
 	PageLayoutOrientation string
 	// PageLayoutPaperSize defines the paper size of the worksheet
 	PageLayoutPaperSize int
+
+	// PrintArea
+	PrintArea string
 )
 
 const (
@@ -1002,6 +1005,21 @@ func (f *File) GetPageLayout(sheet string, opts ...PageLayoutOptionPtr) error {
 		opt.getPageLayout(ps)
 	}
 	return nil
+}
+
+// setPageLayout provides a method to set the orientation for the worksheet.
+func (o PrintArea) setPageLayout(ps *xlsxPageSetUp) {
+	ps.PrintArea = string(o)
+}
+
+// getPageLayout provides a method to get the orientation for the worksheet.
+func (o *PrintArea) getPageLayout(ps *xlsxPageSetUp) {
+	// Excel default: portrait
+	if ps == nil || ps.Orientation == "" {
+		*o = ""
+		return
+	}
+	*o = PrintArea(ps.PrintArea)
 }
 
 // workSheetRelsReader provides a function to get the pointer to the structure
